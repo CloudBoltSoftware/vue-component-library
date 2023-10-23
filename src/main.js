@@ -1,11 +1,7 @@
-import './assets/main.css'
-
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
 import App from './App.vue'
+import HelloWorld from './components/HelloWorld.vue'
+import TheWelcome from './components/TheWelcome.vue'
+import WelcomeItem from './components/WelcomeItem.vue'
 
-const app = createApp(App)
-
-app.use(createPinia())
-
-app.mount('#app')
+export { HelloWorld, TheWelcome, WelcomeItem }
+export default App

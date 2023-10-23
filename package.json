@@ -1,12 +1,22 @@
 {
   "name": "vue-component-library",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "files": ["dist"],
+  "main": "./dist/vue-component-library.js",
+  "module": "./dist/vue-component-library.umd.cjs",
+  "exports": {
+    ".": {
+      "import": "./dist/vue-component-library.js",
+      "require": "./dist/vue-component-library.umd.cjs"
+    },
+    "./style.css": "./dist/style.css"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test:unit": "vitest",
+    "test": "vitest",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "format": "prettier --write src/"
   },

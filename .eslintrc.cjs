@@ -10,5 +10,10 @@ module.exports = {
   ],
   parserOptions: {
     ecmaVersion: 'latest'
+  },
+  rules: {
+    // Prevent errors on unused vars when importing package
+    // TODO: Verify this is necessary
+    'no-unused-vars':'warn'
   }
 }
