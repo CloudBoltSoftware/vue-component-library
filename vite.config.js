@@ -31,7 +31,7 @@ export default defineConfig({
       entry: resolve('src/main.js'),
       name: 'VueComponentLibrary',
     },
-    // cssCodeSplit: false,
+    cssCodeSplit: false,
     rollupOptions: {
       // externalize deps that shouldn't be bundled
       // into your library

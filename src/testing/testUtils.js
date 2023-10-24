@@ -12,10 +12,10 @@ import vuetify from '../plugins/vuetify'
 import VAppWrapper from './VAppWrapper.vue';
 
 /* eslint-disable vue/one-component-per-file */
+
 /**
  * Top section copied and trimmed from CUI src/router/index.js
  */
-
 // Create the History Mode
 // https://router.vuejs.org/guide/essentials/history-mode.html
 const base = import.meta.env.VITE_ROUTE_BASE || '/'

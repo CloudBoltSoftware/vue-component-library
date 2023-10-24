@@ -5,6 +5,7 @@ Library for shared components
 ## Contents
 CbApplet
 - Exports `CbApplet`, `CbAppletTarget`, `TheCbAppletStyles`, and `useAppletsStore`
+- Currently not importing the /styles.css from the build as it is only Vuetify formatting for the icon
 
 ## Recommended IDE Setup
 
@@ -46,4 +47,3 @@ npm run lint
 ### Future Improvments
 - CbApplets
   - Re-integrate use of the theme store
-  

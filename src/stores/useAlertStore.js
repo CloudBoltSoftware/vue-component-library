@@ -55,7 +55,7 @@ export const useAlertStore = defineStore('alert', () => {
    * @param {string} routeOptions.name name of the selected route
    * @returns {Alert} the newly created alert
    */
-  const addAlert = (alert, routeOptions) => {
+  const addAlert = (alert, routeOptions = null) => {
     const id = createId()
     const newAlert = routeOptions
       ? { ...DEFAULT_ALERT, id, ...alert, routeOptions }

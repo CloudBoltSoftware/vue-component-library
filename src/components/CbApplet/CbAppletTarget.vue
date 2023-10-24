@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { storeToRefs } from 'pinia'
+import { setActivePinia, storeToRefs } from 'pinia'
 import { computed, onBeforeMount, toRefs, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppletsStore } from '../../stores/applets'
@@ -32,12 +32,18 @@ const props = defineProps({
     type: Object,
     default: () => ({})
   },
-  /** Route name where this target is. Uses the current route name if none is given. */
+  /** Name for target location. Defaults to the current route name if accessible. */
   page: {
     type: String,
     default: null
-  }
+  },
+  /** Pinia context to pass to the applet */
+  pinia: {
+    type: Object,
+    required: true
+  },
 })
+setActivePinia(props.pinia)
 
 const { t } = useI18n()
 const { page, area, context } = toRefs(props)

@@ -52,6 +52,17 @@ module.exports = {
 
     // Vuetify icons are fine to skip i18n, always beginning with mdi-
     '@intlify/vue-i18n/no-raw-text': ['warn', { ignorePattern: '^mdi-.*$' }],
+
+    // We don't want errant console.logs in production
+    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+
+    // We don't want unused vars hanging around
+    'no-unused-vars': [
+      process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+      { ignoreRestSiblings: true }
+    ]
+
   },
   ignorePatterns: ['node_modules/*', 'dist/*'],
 }

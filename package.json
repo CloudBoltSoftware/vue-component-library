@@ -1,6 +1,7 @@
 {
-  "name": "vue-component-library",
+  "name": "@cloudbolt/vue-component-library",
   "version": "0.0.1",
+  "description": "CloudBolt component library",
   "type": "module",
   "files": [
     "dist"
@@ -11,14 +12,18 @@
     ".": {
       "import": "./dist/vue-component-library.js",
       "require": "./dist/vue-component-library.umd.cjs"
-    },
-    "./style.css": "./dist/style.css"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CloudBoltSoftware/vue-component-library.git"
   },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest",
+    "coverage": "vitest run --coverage",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "format": "prettier --write src/"
   },
