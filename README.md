@@ -2,6 +2,10 @@
 
 Library for shared components
 
+## Contents
+CbApplet
+- Exports `CbApplet`, `CbAppletTarget`, `TheCbAppletStyles`, and `useAppletsStore`
+
 ## Recommended IDE Setup
 
 [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
@@ -39,3 +43,7 @@ npm run test:unit
 ```sh
 npm run lint
 ```
+### Future Improvments
+- CbApplets
+  - Re-integrate use of the theme store
+  

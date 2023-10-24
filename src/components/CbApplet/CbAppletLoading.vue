@@ -1,0 +1,3 @@
+<template>
+  <VProgressCircular indeterminate />
+</template>
