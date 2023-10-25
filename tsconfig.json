@@ -9,12 +9,11 @@
     "esModuleInterop": true,
     "noUnusedLocals": true,
     "noImplicitAny": true,
-    "declarationDir": "types",
     "declaration": true,
     "target": "esnext",
     "module": "commonjs",
     "strict": true,
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "lib", "types", "src/**/*.test.js"]
+  "exclude": ["node_modules", "dist", "src/**/*.test.js"]
 }
