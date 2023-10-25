@@ -8,6 +8,7 @@
   ],
   "main": "./dist/vue-component-library.js",
   "module": "./dist/vue-component-library.umd.cjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/vue-component-library.js",
@@ -55,6 +56,7 @@
     "ramda": "^0.29.1",
     "resize-observer-polyfill": "^1.5.1",
     "vite": "^4.4.11",
+    "vite-plugin-dts": "^3.6.1",
     "vite-plugin-vuetify": "^1.0.2",
     "vitest": "^0.34.6",
     "vue-dompurify-html": "^4.1.4"

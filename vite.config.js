@@ -3,6 +3,7 @@ import { defineConfig } from 'vite'
 import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
 import vue from "@vitejs/plugin-vue";
 import vuetify, { transformAssetUrls }  from "vite-plugin-vuetify";
+import dts from 'vite-plugin-dts'
 import { resolve } from 'path'
 
 // https://vitejs.dev/config/
@@ -16,6 +17,7 @@ export default defineConfig({
     // More setup in src/plugins/i18n/index.js
     // https://github.com/intlify/bundle-tools/tree/main/packages/unplugin-vue-i18n#-options
     VueI18nPlugin(),
+    dts({ rollupTypes: true })
   ],
   resolve: {
     alias: {

@@ -15,35 +15,32 @@ CbApplet
 
 See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-## Project Setup
-
+## Scripts
+- Start up the repo
 ```sh
 npm install
 ```
-
-### Compile and Hot-Reload for Development
-
+- Compile and Hot-Reload for Development
 ```sh
 npm run dev
 ```
-
-### Compile and Minify for Production
-
+- Compile and Minify for Production
 ```sh
 npm run build
 ```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
+-Run Tests with [Vitest](https://vitest.dev/)
 ```sh
-npm run test:unit
+npm run test
 ```
-
-### Lint with [ESLint](https://eslint.org/)
-
+- Lint with [ESLint](https://eslint.org/)
 ```sh
 npm run lint
 ```
+- Check coverage with [istanbul](https://vitest.dev/guide/coverage.html, https://www.npmjs.com/package/@vitest/coverage-istanbul)
+```sh
+npm run coverage
+```
+
 ### Future Improvments
 - CbApplets
   - Re-integrate use of the theme store

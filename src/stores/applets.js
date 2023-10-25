@@ -21,6 +21,9 @@ import { useAlertStore } from './useAlertStore.js'
  * @property {object} cui - the cui targets for the applet
  * @property {string[]} cui.all - the cui target areas for the applet on every page
  * @property {string[]|Object[]} cui.[page] - the cui target areas for the applet on a specific page
+ * @property {object} hui - the hui targets for the applet
+ * @property {string[]} hui.all - the hui target areas for the applet on every page
+ * @property {string[]|Object[]} hui.[page] - the hui target areas for the applet on a specific page
  *   If the area allows configuration, it will be an array of objects with other properties
  */
 
@@ -46,6 +49,9 @@ export const useAppletsStore = defineStore('applets', () => {
 
   /** @type {Applet[]} */
   const applets = ref([])
+
+  /** @type {string} */
+  const appletVersion = ref('cui')
 
   /** @type {boolean} */
   const isLoading = ref(false)
@@ -86,7 +92,9 @@ export const useAppletsStore = defineStore('applets', () => {
     const map = {}
     appletsEnabled.value.forEach((applet) => {
       const cuiTargets = applet.targets?.cui || {}
-      Object.entries(cuiTargets).forEach(([page, areas]) => {
+      const huiTargets = applet.targets?.hui || {}
+      const appletTargets = appletVersion.value === 'cui' ? cuiTargets : huiTargets
+      Object.entries(appletTargets).forEach(([page, areas]) => {
         areas.forEach((area) => {
           if (typeof area === 'string') {
             // The area might be a string to point to a specific area,
