@@ -28,7 +28,7 @@ npm run dev
 ```sh
 npm run build
 ```
--Run Tests with [Vitest](https://vitest.dev/)
+- Run Tests with [Vitest](https://vitest.dev/)
 ```sh
 npm run test
 ```
@@ -36,7 +36,7 @@ npm run test
 ```sh
 npm run lint
 ```
-- Check coverage with [istanbul](https://vitest.dev/guide/coverage.html, https://www.npmjs.com/package/@vitest/coverage-istanbul)
+- Check [Vitest coverage](https://vitest.dev/guide/coverage.html) with [istanbul](https://www.npmjs.com/package/@vitest/coverage-istanbul)
 ```sh
 npm run coverage
 ```
