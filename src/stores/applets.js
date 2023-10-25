@@ -126,6 +126,12 @@ export const useAppletsStore = defineStore('applets', () => {
   )
 
   /**
+   * Updates the version with the given string, usually to hui from cui
+   * @param {string} version
+   */
+    const updateVersion = (version) => appletVersion.value = version
+
+  /**
    * Returns the applet with the given id, or undefined if not found
    * @param {string} id
    * @returns {Applet}
@@ -190,6 +196,7 @@ export const useAppletsStore = defineStore('applets', () => {
     appletsCssHrefs,
     appletsEnabled,
     appletsMap,
+    updateVersion,
     getApplet,
     fetchApplets,
     getAppletsForTarget,

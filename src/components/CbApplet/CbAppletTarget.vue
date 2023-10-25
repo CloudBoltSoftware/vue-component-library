@@ -53,7 +53,7 @@ setActivePinia(props.pinia)
 const { t } = useI18n()
 const { page, area, context } = toRefs(props)
 const appletsStore = useAppletsStore()
-appletsStore.appletVersion = props.version
+appletsStore.updateVersion(props.version)
 const fetchOptions = { errorMessage: t('error') }
 const fetchApplets = () => appletsStore.fetchApplets(fetchOptions)
 
