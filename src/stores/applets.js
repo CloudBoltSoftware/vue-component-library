@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { computed, ref, toValue } from 'vue'
 import api from '@/api'
-import { useAlertStore } from './useAlertStore.js'
 
 /**
  * @typedef {object} Applet
@@ -43,9 +42,21 @@ import { useAlertStore } from './useAlertStore.js'
  * @typedef {Object.<string, AppletAreaMap|AppletTargetConfig[]>} AppletTargetMap
  */
 
+/** Pulled from the pinia AlertStore
+ * @typedef Alert
+ * @type {object}
+ *
+ * Properties to determine the widget identity
+ * @property {number} id the unique id of the alert
+ * @property {string} type type of alert
+ * @property {string} message the message to display
+ * @property {boolean} closable whether the alert is closable
+ * @property {number} timeout the amount of time to display the alert
+ * @property {number} timeoutId the id of the timeout
+ */
+
 export const useAppletsStore = defineStore('applets', () => {
-  const { addErrorAlert, addInfoAlert, addSuccessAlert, removeAlertById } =
-    useAlertStore()
+  const useAlertStore = ref(undefined)
 
   /** @type {Applet[]} */
   const applets = ref([])
@@ -59,13 +70,22 @@ export const useAppletsStore = defineStore('applets', () => {
   /** @type {boolean} */
   const hasLoaded = ref(false)
 
-  /** @type {import('../../CbAlerts/useAlertStore.js').Alert|null} */
+  /** @type {Alert|null} */
   const appletError = ref(null)
 
   /** @type {import('vue').ComputedRef<Applet[]>} */
   const appletsEnabled = computed(() =>
     applets.value.filter((applet) => applet.enabled)
   )
+
+  /**
+   * Use the pinia AlertStore if it exists, otherwise log to console
+   */
+  const alertStoreExists = computed(() => useAlertStore.value != undefined && useAlertStore.value() )
+  const addErrorAlert = computed(() => alertStoreExists.value ? useAlertStore.value().addErrorAlert : console.error)
+  const addInfoAlert = computed(() => alertStoreExists.value ? useAlertStore.value().addInfoAlert : console.log)
+  const addSuccessAlert = computed(() => alertStoreExists.value ? useAlertStore.value().addSuccessAlert : console.log)
+  const removeAlertById = computed(() => alertStoreExists.value ? useAlertStore.value().removeAlertById : () => {})
 
   /**
    * The href for the css file for each enabled applet (deduplicated)
@@ -126,12 +146,6 @@ export const useAppletsStore = defineStore('applets', () => {
   )
 
   /**
-   * Updates the version with the given string, usually to hui from cui
-   * @param {string} version
-   */
-    const updateVersion = (version) => appletVersion.value = version
-
-  /**
    * Returns the applet with the given id, or undefined if not found
    * @param {string} id
    * @returns {Applet}
@@ -148,17 +162,17 @@ export const useAppletsStore = defineStore('applets', () => {
    */
   const fetchApplets = async (options = {}) => {
     if (hasLoaded.value || isLoading.value) return
-
+    
     isLoading.value = true
     let loadingAlert = {}
     if (options.loadingMessage)
-      loadingAlert = addInfoAlert(options.loadingMessage)
+      loadingAlert = addInfoAlert.value(options.loadingMessage)
 
     try {
       const data = await api.v3.cmp.applets.list()
       applets.value = data?.items || []
     } catch (error) {
-      appletError.value = addErrorAlert(
+      appletError.value = addErrorAlert.value(
         options.errorMessage || 'Failed to fetch applets',
         error
       )
@@ -167,8 +181,8 @@ export const useAppletsStore = defineStore('applets', () => {
     appletError.value = null
     isLoading.value = false
     hasLoaded.value = true
-    if (loadingAlert.id) removeAlertById(loadingAlert.id)
-    if (options.loadedMessage) addSuccessAlert(options.loadedMessage)
+    if (loadingAlert.id) removeAlertById.value(loadingAlert.id)
+    if (options.loadedMessage) addSuccessAlert.value(options.loadedMessage)
   }
 
   /**
@@ -196,7 +210,8 @@ export const useAppletsStore = defineStore('applets', () => {
     appletsCssHrefs,
     appletsEnabled,
     appletsMap,
-    updateVersion,
+    appletVersion,
+    useAlertStore,
     getApplet,
     fetchApplets,
     getAppletsForTarget,

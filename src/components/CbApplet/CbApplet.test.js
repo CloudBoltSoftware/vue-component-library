@@ -23,15 +23,6 @@ vi.mock('vue-router', async () => ({
   useRoute: () => ({ name: 'testPage' })
 }))
 
-// Mock the useThemeStore function
-// vi.mock('./stores/theme', () => ({
-//   useThemeStore: vi.fn(() => ({ color: 'blue' }))
-// }))
-
-// Mock the useUserStore function
-vi.mock('@/stores/user', () => ({
-  useUserStore: vi.fn(() => ({ name: 'John Doe' }))
-}))
 
 // Mock the api to something simpler to test for than that in __mocks__
 vi.mock('@/api', () => ({ default: { get: vi.fn() } }))
@@ -75,6 +66,7 @@ const mountApplet = async (props = {}) => {
       page: 'testPage',
       area: 'testArea',
       context: { test: 'context' },
+      user: { name: 'John Doe' },
       ...props
     }
   })
@@ -113,11 +105,6 @@ test('sets the api prop correctly', async () => {
 test('sets the user prop correctly', async () => {
   const { applet } = await mountApplet()
   expect(applet.$props.user).toEqual({ name: 'John Doe' })
-})
-
-test.skip('sets the theme prop correctly', async () => {
-  const { applet } = await mountApplet()
-  expect(applet.$props.theme).toEqual({ color: 'blue' })
 })
 
 test('sets the context prop correctly', async () => {

@@ -8,6 +8,7 @@
       :page="page"
       :area="area"
       :context="context"
+      :user="appletUser"
       v-bind="$attrs"
     />
   </VExpandTransition>
@@ -18,7 +19,6 @@ import { setActivePinia, storeToRefs } from 'pinia'
 import { computed, onBeforeMount, toRefs, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppletsStore } from '../../stores/applets'
-import { useUserStore } from '../../stores/user'
 import CbApplet from './CbApplet.vue'
 
 const props = defineProps({
@@ -47,20 +47,40 @@ const props = defineProps({
     type: String,
     default: 'cui'
   },
+  useAlertStore: {
+    type: Function,
+    default: () => {}
+  },
+  /**
+   * User info passed either directly or through pinia store
+   */
+  useUserStore: {
+    type: Function,
+    default: () => {}
+  },
+  user: {
+    type: Object,
+    default: () => ({})
+  },
 })
 setActivePinia(props.pinia)
-
 const { t } = useI18n()
 const { page, area, context } = toRefs(props)
+
 const appletsStore = useAppletsStore()
-appletsStore.updateVersion(props.version)
+appletsStore.appletVersion = props.version
+if (props.useAlertStore) {
+  appletsStore.useAlertStore = props.useAlertStore
+}
+
 const fetchOptions = { errorMessage: t('error') }
 const fetchApplets = () => appletsStore.fetchApplets(fetchOptions)
 
+// Set user based on pinia UserStore if available, or directly passed user data
+const appletUser = computed(() => props.useUserStore != undefined && props.useUserStore() ? props.useUserStore() : props.user ? props.user  : {} )
+const appletUserName = computed(() => props.useUserStore != undefined && props.useUserStore() ?  storeToRefs(props.useUserStore()).username : appletUser.value.username || '' )
 // Fetch and cache the user's applets on the CUI
-const userStore = useUserStore()
-const { username } = storeToRefs(userStore)
-watch(username, fetchApplets)
+watch(appletUserName, fetchApplets)
 onBeforeMount(fetchApplets)
 
 // Find which applets we should be rendering here

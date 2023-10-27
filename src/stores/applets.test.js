@@ -26,7 +26,9 @@ describe('initial state', () => {
     ['applets', []],
     ['appletError', null],
     ['isLoading', false],
-    ['hasLoaded', false]
+    ['hasLoaded', false],
+    ['appletVersion', 'cui'],
+    ['useAlertStore', undefined],
   ]
 
   // Test that each property in the applets store has the expected initial state

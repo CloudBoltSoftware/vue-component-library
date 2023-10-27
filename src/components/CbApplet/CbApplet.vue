@@ -2,7 +2,7 @@
   <component
     :is="importedComponentModule"
     :api="api"
-    :user="useUserStore()"
+    :user="user"
     :area="area"
     :page="page"
     :context="context"
@@ -11,12 +11,11 @@
 </template>
 
 <script setup>
-import api from '@/api'
-import { useAppletsStore } from '@/stores/applets'
-import { useUserStore } from '@/stores/user'
-import { computed, defineAsyncComponent, toRefs } from 'vue'
-import CbAppletError from './CbAppletError.vue'
-import CbAppletLoading from './CbAppletLoading.vue'
+import api from '@/api';
+import { useAppletsStore } from '@/stores/applets';
+import { computed, defineAsyncComponent, toRefs } from 'vue';
+import CbAppletError from './CbAppletError.vue';
+import CbAppletLoading from './CbAppletLoading.vue';
 
 const props = defineProps({
   /** The Applet's id */
@@ -35,6 +34,10 @@ const props = defineProps({
     type: String,
     required: true
   },
+  user: {
+    type: Object,
+    default: () => {}
+  },
   context: {
     type: Object,
     default: () => {}
@@ -52,7 +55,7 @@ const props = defineProps({
   }
 })
 
-const { id, area, page, context } = toRefs(props)
+const { id, area, page, context, user } = toRefs(props)
 
 /**
  * Whereas the `context` event allows every target to pass in arbitrary data, the `configure` event

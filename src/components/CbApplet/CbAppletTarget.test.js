@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { mergeDeepLeft } from 'ramda'
-import { beforeEach, expect, test, vi } from 'vitest'
+import { expect, test, vi } from 'vitest'
 import { ref } from 'vue'
 import { createVuetify } from 'vuetify'
 import { createTestingPiniaWrapper } from '@/testing/testUtils'
@@ -22,17 +22,6 @@ vi.mock('vue-i18n', async () => {
     useI18n: () => ({ t: vi.fn(() => 'test') })
   }
 })
-
-// Mock the useThemeStore function
-// vi.mock('./stores/theme', () => ({
-//   useThemeStore: vi.fn(() => ({ color: ref('blue') }))
-// }))
-
-// Mock the useUserStore function
-vi.mock('@/stores/user', () => ({
-  useUserStore: vi.fn(() => ({ username: ref('John Doe') }))
-}))
-
 // Mock the api to something simpler to test for than that in __mocks__
 vi.mock('@/api', () => ({ default: { get: vi.fn() } }))
 
@@ -68,17 +57,18 @@ vi.mock('vue', async () => {
   }
 })
 
-beforeEach(createTestingPiniaWrapper)
-
 /** Mount the CbAppletTarget, return the wrapper and CbApplet component to test */
 const mountApplet = (options = {}) => {
   const vuetify = createVuetify()
+  const pinia = createTestingPiniaWrapper()
   const defaultOptions = {
     props: {
       area: 'testArea',
       page: 'testPage',
       context: { hello: 'world' },
-      additionalProp: 'test'
+      additionalProp: 'test',
+      useUserStore: () => ({ username: ref('John Doe') }),
+      pinia
     },
     global: {
       plugins: [vuetify]
