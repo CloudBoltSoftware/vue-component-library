@@ -3,7 +3,6 @@ import { render } from '@testing-library/vue'
 import { fn } from '@vitest/spy'
 import { createPinia, setActivePinia } from 'pinia'
 import { createApp, markRaw } from 'vue'
-import { createMemoryHistory, createWebHistory, createRouter } from '/__mocks__/vue-router'
 import vueDompurifyHTMLPlugin from 'vue-dompurify-html'
 import i18n from '../plugins/i18n'
 import piniaPluginSetupStoreReset from '../plugins/pinia/resetStorePlugin'
@@ -12,19 +11,6 @@ import vuetify from '../plugins/vuetify'
 import VAppWrapper from './VAppWrapper.vue';
 
 /* eslint-disable vue/one-component-per-file */
-
-/**
- * Top section copied and trimmed from CUI src/router/index.js
- */
-// Create the History Mode
-// https://router.vuejs.org/guide/essentials/history-mode.html
-const base = import.meta.env.VITE_ROUTE_BASE || '/'
-
-// Create a basic router config
-// https://router.vuejs.org/api/interfaces/RouterOptions.html
-export const createRouterConfig = () => ({
-  history: createWebHistory(base),
-})
 
 /**
  * Contents below copied and trimmed from CUI src/testing/testUtils.js
@@ -106,17 +92,9 @@ export function renderWrapper(
   // Use Pinia helpers to create auto-resetting stores
   const pinia = createTestingPiniaWrapper({ initialState })
 
-  // Vue router 4 has async caveats that make it complicated to use with testing-library
-  // We're adding it so the <router-link> component works, but anything else (useRouter etc.) may fail
-  // unless handling the async nature of the router within each test.
-  // see https://test-utils.vuejs.org/guide/advanced/vue-router.html
-  const router = createRouter({
-    ...createRouterConfig(),
-    history: createMemoryHistory()
-  })
-
+  // Note: Skipping vue-router in this wrapper
   // Collect all our plugins
-  const plugins = [vueDompurifyHTMLPlugin, i18n, vuetify, pinia, router]
+  const plugins = [vueDompurifyHTMLPlugin, i18n, vuetify, pinia]
 
   /** https://testing-library.com/docs/vue-testing-library/api */
   return {

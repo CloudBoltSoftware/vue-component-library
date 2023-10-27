@@ -27,7 +27,7 @@ describe('initial state', () => {
     ['appletError', null],
     ['isLoading', false],
     ['hasLoaded', false],
-    ['appletVersion', 'cui'],
+    ['appletTargetApplication', ''],
     ['useAlertStore', undefined],
   ]
 
@@ -42,6 +42,7 @@ describe('appletsEnabled', () => {
   beforeEach(() => {
     setRealPiniaToDefaults()
     store = useAppletsStore()
+    store.appletTargetApplication = 'cui'
   })
 
   // Test that appletsEnabled contains the mock applet when it is enabled
@@ -63,6 +64,7 @@ describe('appletsMap', () => {
   describe("doesn't contain disabled applets", () => {
     setRealPiniaToDefaults()
     const store = useAppletsStore()
+    store.appletTargetApplication = 'cui'
     const disabledApplet = { ...mockApplet, enabled: false }
     store.applets.push(disabledApplet)
 
@@ -82,6 +84,7 @@ describe('appletsMap', () => {
   describe('shows targets in the right places', () => {
     setRealPiniaToDefaults()
     const store = useAppletsStore()
+    store.appletTargetApplication = 'cui'
     store.applets.push(mockApplet)
 
     const tests = [
@@ -101,6 +104,7 @@ describe('appletsMap', () => {
   describe("doesn't show targets in the wrong places", () => {
     setRealPiniaToDefaults()
     const store = useAppletsStore()
+    store.appletTargetApplication = 'cui'
     const targetlessApplet = {
       ...mockApplet,
       targets: { cui: {} }
@@ -119,6 +123,16 @@ describe('appletsMap', () => {
       expect(value).toBeUndefined()
     })
   })
+
+  // Test that having no appletTargetApplication throws an error
+  describe("Correctly errors", () => {
+    setRealPiniaToDefaults()
+    const store = useAppletsStore()
+    test('errors when no appletTargetApplication is provided', () => {
+      expect(() => store.appletsMap).toThrow(new Error('No "appletTargetApplication" designated for the Applet store. Please pass a valid "targetApplicaion" to CbAppletTarget or set it directly'))
+    })
+  })
+
 })
 
 describe('getAppletsForTarget', () => {
@@ -126,6 +140,7 @@ describe('getAppletsForTarget', () => {
   beforeEach(() => {
     setRealPiniaToDefaults()
     store = useAppletsStore()
+    store.appletTargetApplication = 'cui'
   })
 
   describe('when an applet targets a particular page and area', () => {

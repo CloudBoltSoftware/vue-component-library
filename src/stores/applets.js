@@ -62,7 +62,7 @@ export const useAppletsStore = defineStore('applets', () => {
   const applets = ref([])
 
   /** @type {string} */
-  const appletVersion = ref('cui')
+  const appletTargetApplication = ref('')
 
   /** @type {boolean} */
   const isLoading = ref(false)
@@ -110,10 +110,11 @@ export const useAppletsStore = defineStore('applets', () => {
    */
   const appletsMap = computed(() => {
     const map = {}
+    if (appletTargetApplication.value === '') {
+      throw Error ('No "appletTargetApplication" designated for the Applet store. Please pass a valid "targetApplicaion" to CbAppletTarget or set it directly')
+    }
     appletsEnabled.value.forEach((applet) => {
-      const cuiTargets = applet.targets?.cui || {}
-      const huiTargets = applet.targets?.hui || {}
-      const appletTargets = appletVersion.value === 'cui' ? cuiTargets : huiTargets
+      const appletTargets = applet.targets?.[appletTargetApplication.value] || {}
       Object.entries(appletTargets).forEach(([page, areas]) => {
         areas.forEach((area) => {
           if (typeof area === 'string') {
@@ -162,7 +163,7 @@ export const useAppletsStore = defineStore('applets', () => {
    */
   const fetchApplets = async (options = {}) => {
     if (hasLoaded.value || isLoading.value) return
-    
+
     isLoading.value = true
     let loadingAlert = {}
     if (options.loadingMessage)
@@ -210,7 +211,7 @@ export const useAppletsStore = defineStore('applets', () => {
     appletsCssHrefs,
     appletsEnabled,
     appletsMap,
-    appletVersion,
+    appletTargetApplication,
     useAlertStore,
     getApplet,
     fetchApplets,

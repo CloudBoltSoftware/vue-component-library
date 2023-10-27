@@ -42,8 +42,8 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  /** Designate HUI or CUI version context */
-  version: {
+  /** Designate application context for applet store */
+  targetApplication: {
     type: String,
     default: 'cui'
   },
@@ -68,7 +68,7 @@ const { t } = useI18n()
 const { page, area, context } = toRefs(props)
 
 const appletsStore = useAppletsStore()
-appletsStore.appletVersion = props.version
+appletsStore.appletTargetApplication = props.targetApplication
 if (props.useAlertStore) {
   appletsStore.useAlertStore = props.useAlertStore
 }
