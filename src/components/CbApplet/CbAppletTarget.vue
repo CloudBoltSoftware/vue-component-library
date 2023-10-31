@@ -22,6 +22,11 @@ import { useAppletsStore } from '../../stores/applets'
 import CbApplet from './CbApplet.vue'
 
 const props = defineProps({
+  /** String identifier for a specific applet name to target */
+  name: {
+    type: String,
+    default: undefined
+  },
   /** String identifier for where on the page this target is */
   area: {
     type: String,
@@ -35,7 +40,7 @@ const props = defineProps({
   /** Name for target location. Defaults to the current route name if accessible. */
   page: {
     type: String,
-    default: null
+    default: undefined
   },
   /** Pinia context to pass to the applet */
   pinia: {
@@ -65,7 +70,7 @@ const props = defineProps({
 })
 setActivePinia(props.pinia)
 const { t } = useI18n()
-const { page, area, context } = toRefs(props)
+const { name, page, area,  context } = toRefs(props)
 
 const appletsStore = useAppletsStore()
 appletsStore.appletTargetApplication = props.targetApplication
@@ -85,7 +90,7 @@ onBeforeMount(fetchApplets)
 
 // Find which applets we should be rendering here
 const targetApplets = computed(() =>
-  appletsStore.getAppletsForTarget(page, area)
+  appletsStore.getAppletsForTarget(page, area, name)
 )
 </script>
 
