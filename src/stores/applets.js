@@ -123,6 +123,14 @@ export const useAppletsStore = defineStore('applets', () => {
             if (!map[page]) map[page] = {}
             if (!map[page][area]) map[page][area] = []
             map[page][area].push(applet)
+          } else if (Array.isArray(area.location)) {
+            // If the area is an object that include location info,
+            // make it accessible at that location
+            area.location.forEach((localArea) => {
+              if (!map[page]) map[page] = {}
+              if (!map[page][localArea]) map[page][localArea] = []
+              map[page][localArea].push(applet)
+            })
           } else {
             // Otherwise the area is an object with other configuration
             // So make put it in an array on the page
@@ -192,7 +200,7 @@ export const useAppletsStore = defineStore('applets', () => {
    * @param {import('vue').MaybeRefOrGetter<string>} targetArea or 'all'
    * @returns {Applet[]}
    */
-  const getAppletsForTarget = (targetPage, targetArea) => {
+  const getAppletsForTarget = (targetPage, targetArea, targetName = undefined) => {
     const page = toValue(targetPage)
     const area = toValue(targetArea)
     const allPossibleTargetApplets = [
@@ -201,7 +209,12 @@ export const useAppletsStore = defineStore('applets', () => {
       ...(appletsMap.value.all?.[area] || []),
       ...(appletsMap.value.all?.all || [])
     ]
-    const uniqueTargetApplets = [...new Set(allPossibleTargetApplets)]
+    let refinedPossibleTargetApplets
+    if (targetName) {
+      const name = toValue(targetName)
+      refinedPossibleTargetApplets = allPossibleTargetApplets.filter((applet) => applet.name === name)
+    }
+    const uniqueTargetApplets =  targetName ? [...new Set(refinedPossibleTargetApplets)] : [...new Set(allPossibleTargetApplets)]
     return uniqueTargetApplets
   }
 
