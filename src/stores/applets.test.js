@@ -242,7 +242,7 @@ describe('getAppletsForTarget', () => {
     }
     const altApplet = {
       ...mockApplet,
-      name: 'Alt Applet',
+      id: 'APL-abcdynrk',
       targets: {
         hui: {
           resourceDetailsTabs: [
@@ -284,11 +284,11 @@ describe('getAppletsForTarget', () => {
       expect(applets).toContainEqual(altApplet)
     })
 
-    test('returns a single applet targeting the tab area with a applet name', () => {
+    test('returns a single applet targeting the tab area with an applet id', () => {
       const applets = store.getAppletsForTarget(
         'resourceDetailsTabs',
         'post-history-tab',
-        'mockApplet'
+        'APL-vwddynrk'
       )
       expect(applets).toContainEqual(applet)
       expect(applets).not.toContainEqual(altApplet)

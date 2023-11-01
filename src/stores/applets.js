@@ -213,7 +213,7 @@ export const useAppletsStore = defineStore('applets', () => {
    * @param {import('vue').MaybeRefOrGetter<string>} targetArea or 'all'
    * @returns {Applet[]}
    */
-  const getAppletsForTarget = (targetPage, targetArea, targetName = undefined) => {
+  const getAppletsForTarget = (targetPage, targetArea, targetId = undefined) => {
     const page = toValue(targetPage)
     const area = toValue(targetArea)
     const allPossibleTargetApplets = [
@@ -223,13 +223,11 @@ export const useAppletsStore = defineStore('applets', () => {
       ...(appletsMap.value.all?.all || [])
     ]
     let refinedPossibleTargetApplets
-    if (targetName) {
-      const name = toValue(targetName)
-      refinedPossibleTargetApplets = allPossibleTargetApplets.filter(
-        (applet) => applet.name === name
-      )
+    if (targetId) {
+      const id = toValue(targetId)
+      refinedPossibleTargetApplets = allPossibleTargetApplets.filter((applet) => applet.id === id)
     }
-    const uniqueTargetApplets = targetName
+    const uniqueTargetApplets = targetId
       ? [...new Set(refinedPossibleTargetApplets)]
       : [...new Set(allPossibleTargetApplets)]
     return uniqueTargetApplets
