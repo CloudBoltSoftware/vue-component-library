@@ -347,6 +347,16 @@ describe('fetchApplets', () => {
     await store.fetchApplets()
     expect(store.applets).toContainEqual(mockApplet)
   })
+
+  test('errors correctly when appletApi not provided', async () => {
+    const store = useAppletsStore()
+    store.appletApi = undefined
+    expect(async () => store.fetchApplets()).rejects.toThrow(
+      new Error(
+        'No "appletApi" instance loaded in the Applet store. Please pass "api" to CbAppletTarget or set it directly'
+      )
+    )
+  })
 })
 
 describe('appletsCssHrefs', () => {
