@@ -5,6 +5,7 @@
       v-for="applet in targetApplets"
       :id="applet.id"
       :key="applet.id"
+      :api="api"
       :page="page"
       :area="area"
       :context="context"
@@ -47,6 +48,11 @@ const props = defineProps({
     type: Object,
     required: true
   },
+  /** API context to pass to the applet */
+  api: {
+    type: Object,
+    required: true
+  },
   /** Designate application context for applet store */
   targetApplication: {
     type: String,
@@ -70,10 +76,11 @@ const props = defineProps({
 })
 setActivePinia(props.pinia)
 const { t } = useI18n()
-const { name, page, area,  context } = toRefs(props)
+const { name, page, area, context } = toRefs(props)
 
 const appletsStore = useAppletsStore()
 appletsStore.appletTargetApplication = props.targetApplication
+appletsStore.appletApi = props.api
 if (props.useAlertStore) {
   appletsStore.useAlertStore = props.useAlertStore
 }

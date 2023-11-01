@@ -1,11 +1,11 @@
-import { beforeEach, describe, expect, test } from 'vitest'
-import api from '@/api'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { setRealPiniaToDefaults } from '../testing/testUtils'
 import { useAppletsStore } from './applets'
 
 // Define a mock applet object to use in tests
 const mockApplet = {
   id: 'APL-vwddynrk',
+  name: 'mockApplet',
   targets: {
     cui: {
       resourceDetail: ['postActions', 'all'],
@@ -29,6 +29,7 @@ describe('initial state', () => {
     ['hasLoaded', false],
     ['appletTargetApplication', ''],
     ['useAlertStore', undefined],
+    ['appletApi', undefined],
   ]
 
   // Test that each property in the applets store has the expected initial state
@@ -141,6 +142,7 @@ describe('getAppletsForTarget', () => {
     setRealPiniaToDefaults()
     store = useAppletsStore()
     store.appletTargetApplication = 'cui'
+    store.appletApi = { v3: { cmp: { applets: { list: vi.fn() } }}}
   })
 
   describe('when an applet targets a particular page and area', () => {
@@ -220,12 +222,70 @@ describe('getAppletsForTarget', () => {
     const applets = store.getAppletsForTarget('resourceDetail', 'postActions')
     expect(applets).toHaveLength(1)
   })
+
+  describe('when an applet targets the resourceDetailTab and particular applet', () => {
+    const applet = {
+      ...mockApplet,
+      targets: { 
+        hui: { 
+          resourceDetailsTabs: [{resourceTypes: ["s3_bucket"], label: "Custom Applet", location: ["post-jobs-tab", "post-history-tab"]}] 
+        } 
+      }
+    }
+    const altApplet = {
+      ...mockApplet,
+      name: 'Alt Applet',
+      targets: { 
+        hui: { 
+          resourceDetailsTabs: [{resourceTypes: ["server"], label: "Second Applet", location: ["post-overview-tab", "post-history-tab"]}] 
+        } 
+      }
+    }
+
+    beforeEach(() => {
+      store.applets.push(applet)
+      store.applets.push(altApplet)
+      store.appletTargetApplication = 'hui'
+    })
+
+    test('returns applets that target the given page and area', () => {
+      const applets = store.getAppletsForTarget('resourceDetailsTabs', "post-jobs-tab")
+      expect(applets).toContainEqual(applet)
+    })
+
+    test("doesn't return applets that don't target the given area", () => {
+      const applets = store.getAppletsForTarget('resourceDetailsTabs', "post-overview-tab")
+      expect(applets).not.toContainEqual(applet)
+    })
+
+    test("doesn't return applets that don't target the given page", () => {
+      const applets = store.getAppletsForTarget('anotherPage', "post-jobs-tab")
+      expect(applets).not.toContainEqual(applet)
+      expect(applets).not.toContainEqual(altApplet)
+    })
+
+    test("returns multiple applets when validly targeting the same tab area", () => {
+      const applets = store.getAppletsForTarget('resourceDetailsTabs', "post-history-tab")
+      expect(applets).toContainEqual(applet)
+      expect(applets).toContainEqual(altApplet)
+    })
+
+    test("returns a single applet targeting the tab area with a applet name", () => {
+      const applets = store.getAppletsForTarget('resourceDetailsTabs', "post-history-tab", 'mockApplet')
+      expect(applets).toContainEqual(applet)
+      expect(applets).not.toContainEqual(altApplet)
+    })
+  })
 })
 
 describe('fetchApplets', () => {
+  let store
+  const api = { v3: { cmp: { applets: { list: vi.fn() } }}}
   beforeEach(() => {
     setRealPiniaToDefaults()
     const mockAppletList = { items: [mockApplet] }
+    store = useAppletsStore()
+    store.appletApi = api
     api.v3.cmp.applets.list.mockResolvedValue(mockAppletList)
   })
 

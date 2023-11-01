@@ -11,7 +11,6 @@
 </template>
 
 <script setup>
-import api from '@/api';
 import { useAppletsStore } from '@/stores/applets';
 import { computed, defineAsyncComponent, toRefs } from 'vue';
 import CbAppletError from './CbAppletError.vue';
@@ -42,6 +41,10 @@ const props = defineProps({
     type: Object,
     default: () => {}
   },
+  api: {
+    type: Object,
+    required: true
+  },
   /**
    * Normally, we'd create a `configure` emit. However, we want to check whether or not there
    * is one set. This isn't possible with a normal emit. See Vue discussion here:
@@ -55,7 +58,7 @@ const props = defineProps({
   }
 })
 
-const { id, area, page, context, user } = toRefs(props)
+const { id, area, page, context, user, api } = toRefs(props)
 
 /**
  * Whereas the `context` event allows every target to pass in arbitrary data, the `configure` event

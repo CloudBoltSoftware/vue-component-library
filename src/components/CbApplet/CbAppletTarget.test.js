@@ -22,8 +22,6 @@ vi.mock('vue-i18n', async () => {
     useI18n: () => ({ t: vi.fn(() => 'test') })
   }
 })
-// Mock the api to something simpler to test for than that in __mocks__
-vi.mock('@/api', () => ({ default: { get: vi.fn() } }))
 
 // Mock the applets store to return a single mock applet
 const mockApplet = {
@@ -68,7 +66,8 @@ const mountApplet = (options = {}) => {
       context: { hello: 'world' },
       additionalProp: 'test',
       useUserStore: () => ({ username: ref('John Doe') }),
-      pinia
+      pinia,
+      api: { default: { get: vi.fn() } }
     },
     global: {
       plugins: [vuetify]
