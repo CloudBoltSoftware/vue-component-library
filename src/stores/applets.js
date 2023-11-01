@@ -75,18 +75,24 @@ export const useAppletsStore = defineStore('applets', () => {
   const appletError = ref(null)
 
   /** @type {import('vue').ComputedRef<Applet[]>} */
-  const appletsEnabled = computed(() =>
-    applets.value.filter((applet) => applet.enabled)
-  )
+  const appletsEnabled = computed(() => applets.value.filter((applet) => applet.enabled))
 
   /**
    * Use the pinia AlertStore if it exists, otherwise log to console
    */
-  const alertStoreExists = computed(() => useAlertStore.value != undefined && useAlertStore.value() )
-  const addErrorAlert = computed(() => alertStoreExists.value ? useAlertStore.value().addErrorAlert : console.error)
-  const addInfoAlert = computed(() => alertStoreExists.value ? useAlertStore.value().addInfoAlert : console.log)
-  const addSuccessAlert = computed(() => alertStoreExists.value ? useAlertStore.value().addSuccessAlert : console.log)
-  const removeAlertById = computed(() => alertStoreExists.value ? useAlertStore.value().removeAlertById : () => {})
+  const alertStoreExists = computed(() => useAlertStore.value != undefined && useAlertStore.value())
+  const addErrorAlert = computed(() =>
+    alertStoreExists.value ? useAlertStore.value().addErrorAlert : console.error
+  )
+  const addInfoAlert = computed(() =>
+    alertStoreExists.value ? useAlertStore.value().addInfoAlert : console.log
+  )
+  const addSuccessAlert = computed(() =>
+    alertStoreExists.value ? useAlertStore.value().addSuccessAlert : console.log
+  )
+  const removeAlertById = computed(() =>
+    alertStoreExists.value ? useAlertStore.value().removeAlertById : () => {}
+  )
 
   /**
    * The href for the css file for each enabled applet (deduplicated)
@@ -112,11 +118,13 @@ export const useAppletsStore = defineStore('applets', () => {
   const appletsMap = computed(() => {
     const map = {}
     if (appletTargetApplication.value === '') {
-      throw Error ('No "appletTargetApplication" designated for the Applet store. Please pass a valid "targetApplicaion" to CbAppletTarget or set it directly')
+      throw Error(
+        'No "appletTargetApplication" designated for the Applet store. Please pass a valid "targetApplicaion" to CbAppletTarget or set it directly'
+      )
     }
     appletsEnabled.value.forEach((applet) => {
-            const appletTargets = applet.targets?.[appletTargetApplication.value] || {}
-            Object.entries(appletTargets).forEach(([page, areas]) => {
+      const appletTargets = applet.targets?.[appletTargetApplication.value] || {}
+      Object.entries(appletTargets).forEach(([page, areas]) => {
         areas.forEach((area) => {
           if (typeof area === 'string') {
             // The area might be a string to point to a specific area,
@@ -173,13 +181,14 @@ export const useAppletsStore = defineStore('applets', () => {
   const fetchApplets = async (options = {}) => {
     if (hasLoaded.value || isLoading.value) return
     if (appletApi.value === undefined) {
-      throw Error ('No "appletApi" instance loaded in the Applet store. Please pass "api" to CbAppletTarget or set it directly')
+      throw Error(
+        'No "appletApi" instance loaded in the Applet store. Please pass "api" to CbAppletTarget or set it directly'
+      )
     }
     const api = toValue(appletApi)
     isLoading.value = true
     let loadingAlert = {}
-    if (options.loadingMessage)
-      loadingAlert = addInfoAlert.value(options.loadingMessage)
+    if (options.loadingMessage) loadingAlert = addInfoAlert.value(options.loadingMessage)
 
     try {
       const data = await api.v3.cmp.applets.list()
@@ -216,10 +225,14 @@ export const useAppletsStore = defineStore('applets', () => {
     let refinedPossibleTargetApplets
     if (targetName) {
       const name = toValue(targetName)
-      refinedPossibleTargetApplets = allPossibleTargetApplets.filter((applet) => applet.name === name)
+      refinedPossibleTargetApplets = allPossibleTargetApplets.filter(
+        (applet) => applet.name === name
+      )
     }
-    const uniqueTargetApplets =  targetName ? [...new Set(refinedPossibleTargetApplets)] : [...new Set(allPossibleTargetApplets)]
-        return uniqueTargetApplets
+    const uniqueTargetApplets = targetName
+      ? [...new Set(refinedPossibleTargetApplets)]
+      : [...new Set(allPossibleTargetApplets)]
+    return uniqueTargetApplets
   }
 
   return {

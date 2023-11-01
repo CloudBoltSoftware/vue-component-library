@@ -14,8 +14,7 @@ const mockApplet = {
     }
   },
   enabled: true,
-  entryComponent:
-    '/static/uploads/applets/cui-applet/cui-applet/static/main.es.js'
+  entryComponent: '/static/uploads/applets/cui-applet/cui-applet/static/main.es.js'
 }
 
 const renderComponent = (applets = []) => {
@@ -34,8 +33,7 @@ it('renders without crashing', () => {
 
 it('renders a single applet style', async () => {
   const { findByTestId } = renderComponent([mockApplet])
-  const expectedHref =
-    '/static/uploads/applets/cui-applet/cui-applet/static/style.css'
+  const expectedHref = '/static/uploads/applets/cui-applet/cui-applet/static/style.css'
   const link = await findByTestId('applet-css')
   expect(link).toHaveAttribute('href', expectedHref)
   expect(link).toHaveAttribute('rel', 'stylesheet')

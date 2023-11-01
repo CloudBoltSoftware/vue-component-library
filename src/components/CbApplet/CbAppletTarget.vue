@@ -72,7 +72,7 @@ const props = defineProps({
   user: {
     type: Object,
     default: () => ({})
-  },
+  }
 })
 setActivePinia(props.pinia)
 const { t } = useI18n()
@@ -89,16 +89,24 @@ const fetchOptions = { errorMessage: t('error') }
 const fetchApplets = () => appletsStore.fetchApplets(fetchOptions)
 
 // Set user based on pinia UserStore if available, or directly passed user data
-const appletUser = computed(() => props.useUserStore != undefined && props.useUserStore() ? props.useUserStore() : props.user ? props.user  : {} )
-const appletUserName = computed(() => props.useUserStore != undefined && props.useUserStore() ?  storeToRefs(props.useUserStore()).username : appletUser.value.username || '' )
+const appletUser = computed(() =>
+  props.useUserStore != undefined && props.useUserStore()
+    ? props.useUserStore()
+    : props.user
+    ? props.user
+    : {}
+)
+const appletUserName = computed(() =>
+  props.useUserStore != undefined && props.useUserStore()
+    ? storeToRefs(props.useUserStore()).username
+    : appletUser.value.username || ''
+)
 // Fetch and cache the user's applets on the CUI
 watch(appletUserName, fetchApplets)
 onBeforeMount(fetchApplets)
 
 // Find which applets we should be rendering here
-const targetApplets = computed(() =>
-  appletsStore.getAppletsForTarget(page, area, name)
-)
+const targetApplets = computed(() => appletsStore.getAppletsForTarget(page, area, name))
 </script>
 
 <i18n lang="json" locale="en">

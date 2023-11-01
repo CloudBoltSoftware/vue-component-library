@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import { computed, useAttrs } from 'vue';
+import { computed, useAttrs } from 'vue'
 
 const props = defineProps({
   // component requires v-binding to an is prop.

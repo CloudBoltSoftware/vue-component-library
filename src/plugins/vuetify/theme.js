@@ -2,7 +2,7 @@
  * Duplicated from the CUI at src/plugins/vuetify/theme.js
  * Removed Cloudbolt defaultPortalTheme
  */
-import colors from "vuetify/lib/util/colors";
+import colors from 'vuetify/lib/util/colors'
 
 /**
  * Custom theme for CloudBolt
@@ -17,12 +17,12 @@ export const cbLightTheme = {
 
   colors: {
     primary: colors.blue.darken2,
-    "primary-lighten-5": colors.blue.lighten5,
+    'primary-lighten-5': colors.blue.lighten5,
     secondary: colors.grey.darken3,
     accent: colors.blue.accent1,
     error: colors.red.accent2,
     info: colors.blue.base,
     success: colors.green.base,
-    warning: colors.amber.base,
-  },
-};
+    warning: colors.amber.base
+  }
+}

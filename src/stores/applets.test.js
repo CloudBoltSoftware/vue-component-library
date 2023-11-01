@@ -14,8 +14,7 @@ const mockApplet = {
     }
   },
   enabled: true,
-  entryComponent:
-    '/static/uploads/applets/cui-applet/cui-applet/static/main.es.js'
+  entryComponent: '/static/uploads/applets/cui-applet/cui-applet/static/main.es.js'
 }
 
 describe('initial state', () => {
@@ -29,7 +28,7 @@ describe('initial state', () => {
     ['hasLoaded', false],
     ['appletTargetApplication', ''],
     ['useAlertStore', undefined],
-    ['appletApi', undefined],
+    ['appletApi', undefined]
   ]
 
   // Test that each property in the applets store has the expected initial state
@@ -126,14 +125,17 @@ describe('appletsMap', () => {
   })
 
   // Test that having no appletTargetApplication throws an error
-  describe("Correctly errors", () => {
+  describe('Correctly errors', () => {
     setRealPiniaToDefaults()
     const store = useAppletsStore()
     test('errors when no appletTargetApplication is provided', () => {
-      expect(() => store.appletsMap).toThrow(new Error('No "appletTargetApplication" designated for the Applet store. Please pass a valid "targetApplicaion" to CbAppletTarget or set it directly'))
+      expect(() => store.appletsMap).toThrow(
+        new Error(
+          'No "appletTargetApplication" designated for the Applet store. Please pass a valid "targetApplicaion" to CbAppletTarget or set it directly'
+        )
+      )
     })
   })
-
 })
 
 describe('getAppletsForTarget', () => {
@@ -142,7 +144,7 @@ describe('getAppletsForTarget', () => {
     setRealPiniaToDefaults()
     store = useAppletsStore()
     store.appletTargetApplication = 'cui'
-    store.appletApi = { v3: { cmp: { applets: { list: vi.fn() } }}}
+    store.appletApi = { v3: { cmp: { applets: { list: vi.fn() } } } }
   })
 
   describe('when an applet targets a particular page and area', () => {
@@ -226,19 +228,31 @@ describe('getAppletsForTarget', () => {
   describe('when an applet targets the resourceDetailTab and particular applet', () => {
     const applet = {
       ...mockApplet,
-      targets: { 
-        hui: { 
-          resourceDetailsTabs: [{resourceTypes: ["s3_bucket"], label: "Custom Applet", location: ["post-jobs-tab", "post-history-tab"]}] 
-        } 
+      targets: {
+        hui: {
+          resourceDetailsTabs: [
+            {
+              resourceTypes: ['s3_bucket'],
+              label: 'Custom Applet',
+              location: ['post-jobs-tab', 'post-history-tab']
+            }
+          ]
+        }
       }
     }
     const altApplet = {
       ...mockApplet,
       name: 'Alt Applet',
-      targets: { 
-        hui: { 
-          resourceDetailsTabs: [{resourceTypes: ["server"], label: "Second Applet", location: ["post-overview-tab", "post-history-tab"]}] 
-        } 
+      targets: {
+        hui: {
+          resourceDetailsTabs: [
+            {
+              resourceTypes: ['server'],
+              label: 'Second Applet',
+              location: ['post-overview-tab', 'post-history-tab']
+            }
+          ]
+        }
       }
     }
 
@@ -249,29 +263,33 @@ describe('getAppletsForTarget', () => {
     })
 
     test('returns applets that target the given page and area', () => {
-      const applets = store.getAppletsForTarget('resourceDetailsTabs', "post-jobs-tab")
+      const applets = store.getAppletsForTarget('resourceDetailsTabs', 'post-jobs-tab')
       expect(applets).toContainEqual(applet)
     })
 
     test("doesn't return applets that don't target the given area", () => {
-      const applets = store.getAppletsForTarget('resourceDetailsTabs', "post-overview-tab")
+      const applets = store.getAppletsForTarget('resourceDetailsTabs', 'post-overview-tab')
       expect(applets).not.toContainEqual(applet)
     })
 
     test("doesn't return applets that don't target the given page", () => {
-      const applets = store.getAppletsForTarget('anotherPage', "post-jobs-tab")
+      const applets = store.getAppletsForTarget('anotherPage', 'post-jobs-tab')
       expect(applets).not.toContainEqual(applet)
       expect(applets).not.toContainEqual(altApplet)
     })
 
-    test("returns multiple applets when validly targeting the same tab area", () => {
-      const applets = store.getAppletsForTarget('resourceDetailsTabs', "post-history-tab")
+    test('returns multiple applets when validly targeting the same tab area', () => {
+      const applets = store.getAppletsForTarget('resourceDetailsTabs', 'post-history-tab')
       expect(applets).toContainEqual(applet)
       expect(applets).toContainEqual(altApplet)
     })
 
-    test("returns a single applet targeting the tab area with a applet name", () => {
-      const applets = store.getAppletsForTarget('resourceDetailsTabs', "post-history-tab", 'mockApplet')
+    test('returns a single applet targeting the tab area with a applet name', () => {
+      const applets = store.getAppletsForTarget(
+        'resourceDetailsTabs',
+        'post-history-tab',
+        'mockApplet'
+      )
       expect(applets).toContainEqual(applet)
       expect(applets).not.toContainEqual(altApplet)
     })
@@ -280,7 +298,7 @@ describe('getAppletsForTarget', () => {
 
 describe('fetchApplets', () => {
   let store
-  const api = { v3: { cmp: { applets: { list: vi.fn() } }}}
+  const api = { v3: { cmp: { applets: { list: vi.fn() } } } }
   beforeEach(() => {
     setRealPiniaToDefaults()
     const mockAppletList = { items: [mockApplet] }
@@ -354,8 +372,7 @@ describe('appletsCssHrefs', () => {
 
   test('sets the href to the applet css url based on the entryComponent', () => {
     store.applets.push(mockApplet)
-    const expectedCssHref =
-      '/static/uploads/applets/cui-applet/cui-applet/static/style.css'
+    const expectedCssHref = '/static/uploads/applets/cui-applet/cui-applet/static/style.css'
     expect(store.appletsCssHrefs[0]).toEqual(expectedCssHref)
   })
 
