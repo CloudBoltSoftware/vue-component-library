@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { computed, ref, toValue } from 'vue'
-import api from '@/api'
 
 /**
  * @typedef {object} Applet
@@ -56,6 +55,8 @@ import api from '@/api'
  */
 
 export const useAppletsStore = defineStore('applets', () => {
+  /** @type {object} */
+  const appletApi = ref(undefined)
   const useAlertStore = ref(undefined)
 
   /** @type {Applet[]} */
@@ -114,8 +115,8 @@ export const useAppletsStore = defineStore('applets', () => {
       throw Error ('No "appletTargetApplication" designated for the Applet store. Please pass a valid "targetApplicaion" to CbAppletTarget or set it directly')
     }
     appletsEnabled.value.forEach((applet) => {
-      const appletTargets = applet.targets?.[appletTargetApplication.value] || {}
-      Object.entries(appletTargets).forEach(([page, areas]) => {
+            const appletTargets = applet.targets?.[appletTargetApplication.value] || {}
+            Object.entries(appletTargets).forEach(([page, areas]) => {
         areas.forEach((area) => {
           if (typeof area === 'string') {
             // The area might be a string to point to a specific area,
@@ -171,7 +172,10 @@ export const useAppletsStore = defineStore('applets', () => {
    */
   const fetchApplets = async (options = {}) => {
     if (hasLoaded.value || isLoading.value) return
-
+    if (appletApi.value === undefined) {
+      throw Error ('No "appletApi" instance loaded in the Applet store. Please pass "api" to CbAppletTarget or set it directly')
+    }
+    const api = toValue(appletApi)
     isLoading.value = true
     let loadingAlert = {}
     if (options.loadingMessage)
@@ -215,10 +219,11 @@ export const useAppletsStore = defineStore('applets', () => {
       refinedPossibleTargetApplets = allPossibleTargetApplets.filter((applet) => applet.name === name)
     }
     const uniqueTargetApplets =  targetName ? [...new Set(refinedPossibleTargetApplets)] : [...new Set(allPossibleTargetApplets)]
-    return uniqueTargetApplets
+        return uniqueTargetApplets
   }
 
   return {
+    appletApi,
     appletError,
     applets,
     appletsCssHrefs,

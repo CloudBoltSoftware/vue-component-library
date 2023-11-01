@@ -62,6 +62,7 @@ const mountApplet = async (props = {}) => {
   setUpStore()
   const wrapper = mount(CbApplet, {
     props: {
+      api: { get: { get: vi.fn() } },
       id: 'APL-123',
       page: 'testPage',
       area: 'testArea',
