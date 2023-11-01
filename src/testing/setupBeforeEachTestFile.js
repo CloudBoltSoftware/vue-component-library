@@ -14,8 +14,7 @@ vi.stubGlobal('navigator.clipboard', vi.fn())
 vi.stubGlobal('open', vi.fn())
 vi.stubGlobal('scrollTo', vi.fn())
 
-// Mock external packages for every test
-// vi.mock('@cloudbolt/js-sdk')
+// Mock external packages for every test when needed
 
 // Add jest-dom matchers to expect (like toBeInTheDocument, etc.)
 // See the list of what's available here: https://github.com/testing-library/jest-dom#table-of-contents
