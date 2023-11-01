@@ -23,8 +23,8 @@ import { useAppletsStore } from '../../stores/applets'
 import CbApplet from './CbApplet.vue'
 
 const props = defineProps({
-  /** String identifier for a specific applet name to target */
-  name: {
+  /** String identifier for a specific applet id to target */
+  id: {
     type: String,
     default: undefined
   },
@@ -76,7 +76,7 @@ const props = defineProps({
 })
 setActivePinia(props.pinia)
 const { t } = useI18n()
-const { name, page, area, context } = toRefs(props)
+const { id, page, area, context } = toRefs(props)
 
 const appletsStore = useAppletsStore()
 appletsStore.appletTargetApplication = props.targetApplication
@@ -106,7 +106,7 @@ watch(appletUserName, fetchApplets)
 onBeforeMount(fetchApplets)
 
 // Find which applets we should be rendering here
-const targetApplets = computed(() => appletsStore.getAppletsForTarget(page, area, name))
+const targetApplets = computed(() => appletsStore.getAppletsForTarget(page, area, id))
 </script>
 
 <i18n lang="json" locale="en">
