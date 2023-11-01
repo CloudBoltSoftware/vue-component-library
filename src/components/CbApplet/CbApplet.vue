@@ -11,10 +11,10 @@
 </template>
 
 <script setup>
-import { useAppletsStore } from '@/stores/applets';
-import { computed, defineAsyncComponent, toRefs } from 'vue';
-import CbAppletError from './CbAppletError.vue';
-import CbAppletLoading from './CbAppletLoading.vue';
+import { useAppletsStore } from '@/stores/applets'
+import { computed, defineAsyncComponent, toRefs } from 'vue'
+import CbAppletError from './CbAppletError.vue'
+import CbAppletLoading from './CbAppletLoading.vue'
 
 const props = defineProps({
   /** The Applet's id */
@@ -95,8 +95,7 @@ const configure = (configuration) => {
     // Remember to also validate the configuration and give good warning messages to help out the applet author.
     // eslint-disable-next-line no-console
     console.log(
-      helpText +
-        ' However, the applet tried to configure it with the following options:',
+      helpText + ' However, the applet tried to configure it with the following options:',
       configuration
     )
   }
@@ -111,7 +110,6 @@ const applet = computed(() => getApplet(id.value) || {})
 const importedComponentModule = defineAsyncComponent({
   loadingComponent: CbAppletLoading,
   errorComponent: CbAppletError,
-  loader: async () =>
-    await import(/* @vite-ignore */ applet.value.entryComponent)
+  loader: async () => await import(/* @vite-ignore */ applet.value.entryComponent)
 })
 </script>

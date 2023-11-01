@@ -23,7 +23,6 @@ vi.mock('vue-router', async () => ({
   useRoute: () => ({ name: 'testPage' })
 }))
 
-
 // Mock the api to something simpler to test for than that in __mocks__
 vi.mock('@/api', () => ({ default: { get: vi.fn() } }))
 

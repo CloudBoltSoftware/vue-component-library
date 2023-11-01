@@ -8,7 +8,7 @@ import i18n from '../plugins/i18n'
 import piniaPluginSetupStoreReset from '../plugins/pinia/resetStorePlugin'
 import vuetify from '../plugins/vuetify'
 
-import VAppWrapper from './VAppWrapper.vue';
+import VAppWrapper from './VAppWrapper.vue'
 
 /* eslint-disable vue/one-component-per-file */
 

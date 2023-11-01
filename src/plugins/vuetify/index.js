@@ -1,17 +1,17 @@
 /**
  * Duplicated from the CUI at src/plugins/vuetify/index.js
  */
-import { createVuetify } from "vuetify";
-import { fa } from "vuetify/iconsets/fa";
-import { aliases, mdi } from "vuetify/iconsets/mdi";
-import { VDataTable } from "vuetify/labs/VDataTable";
+import { createVuetify } from 'vuetify'
+import { fa } from 'vuetify/iconsets/fa'
+import { aliases, mdi } from 'vuetify/iconsets/mdi'
+import { VDataTable } from 'vuetify/labs/VDataTable'
 
 // Translations provided by Vuetify
-import { en } from "vuetify/locale";
+import { en } from 'vuetify/locale'
 
 // Styles
-import "vuetify/styles";
-import { cbLightTheme } from "./theme";
+import 'vuetify/styles'
+import { cbLightTheme } from './theme'
 
 export default createVuetify({
   /**
@@ -21,30 +21,30 @@ export default createVuetify({
    */
   defaults: {
     global: {
-      density: "compact",
+      density: 'compact'
     },
     VIcon: {
-      size: "small",
+      size: 'small'
     },
     VChip: {
-      density: "default",
+      density: 'default'
     },
     VBtn: {
       // Removes the all-caps and wide letter spacing from buttons
-      class: "text-none",
-      style: "letter-spacing: normal",
+      class: 'text-none',
+      style: 'letter-spacing: normal'
     },
     VMenu: {
       VBtn: {
-        density: "default",
-      },
+        density: 'default'
+      }
     },
     VTextarea: {
-      hideDetails: "auto",
+      hideDetails: 'auto'
     },
     VCheckbox: {
-      hideDetails: "auto",
-    },
+      hideDetails: 'auto'
+    }
   },
 
   /**
@@ -54,7 +54,7 @@ export default createVuetify({
    * @see {@link https://vuetifyjs.com/en/labs/introduction/}
    */
   components: {
-    VDataTable,
+    VDataTable
   },
 
   /**
@@ -70,8 +70,8 @@ export default createVuetify({
     sets: {
       // This gives us access to the full fontawesome icon set in VIcon like `fa:fa-plus` or `fas fa-plus`
       fa,
-      mdi,
-    },
+      mdi
+    }
   },
 
   /**
@@ -79,9 +79,9 @@ export default createVuetify({
    * @see {@link https://vuetifyjs.com/en/features/internationalization/#internationalization-i18n}
    */
   locale: {
-    locale: "en",
-    fallback: "en",
-    messages: { en },
+    locale: 'en',
+    fallback: 'en',
+    messages: { en }
   },
 
   /**
@@ -90,14 +90,14 @@ export default createVuetify({
    */
   theme: {
     themes: {
-      cbLightTheme,
+      cbLightTheme
     },
-    defaultTheme: "cbLightTheme",
+    defaultTheme: 'cbLightTheme',
     variations: {
       // If you use more color variations or lighten/darken amounts, add them here
-      colors: ["primary", "secondary", "grey"],
+      colors: ['primary', 'secondary', 'grey'],
       lighten: 5,
-      darken: 2,
-    },
-  },
-});
+      darken: 2
+    }
+  }
+})

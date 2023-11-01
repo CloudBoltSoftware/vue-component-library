@@ -10,8 +10,8 @@
 </template>
 
 <script setup>
-import { storeToRefs } from 'pinia';
-import { useAppletsStore } from '../../stores/applets';
+import { storeToRefs } from 'pinia'
+import { useAppletsStore } from '../../stores/applets'
 
 const { appletsCssHrefs } = storeToRefs(useAppletsStore())
 </script>
