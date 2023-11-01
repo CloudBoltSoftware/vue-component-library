@@ -1,15 +1,15 @@
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
-import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
-import vue from "@vitejs/plugin-vue";
-import vuetify, { transformAssetUrls }  from "vite-plugin-vuetify";
+import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
+import vue from '@vitejs/plugin-vue'
+import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 import dts from 'vite-plugin-dts'
 import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    vue({ 
+    vue({
       template: { transformAssetUrls }
     }),
     vuetify({ autoImport: true }),
@@ -25,13 +25,13 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    include: ["vuetify"],
+    include: ['vuetify']
   },
   build: {
     // https://vitejs.dev/guide/build.html#library-mode
     lib: {
       entry: resolve('src/main.js'),
-      name: 'VueComponentLibrary',
+      name: 'VueComponentLibrary'
     },
     cssCodeSplit: false,
     rollupOptions: {
@@ -46,13 +46,13 @@ export default defineConfig({
         globals: {
           vue: 'Vue',
           pinia: 'pinia'
-        },
-      },
-    },
+        }
+      }
+    }
   },
   test: {
     coverage: {
-      provider: "istanbul",
+      provider: 'istanbul'
     },
     server: {
       deps: {
@@ -61,7 +61,7 @@ export default defineConfig({
           // Vuetify doesn't ship a vitest compatible code format, so we can inline it to bypass the issue.
           'vuetify'
         ]
-      },
+      }
     },
     // jsdom is a lightweight browser environment that can be used for testing
     environment: 'jsdom',
@@ -71,5 +71,5 @@ export default defineConfig({
     watchExclude: ['**/node_modules/**'],
     // To have the greatest isolation between tests, we completely reset mocks every test
     restoreMocks: true
-  },
+  }
 })

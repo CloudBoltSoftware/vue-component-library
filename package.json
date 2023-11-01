@@ -28,7 +28,8 @@
     "check:lint": "eslint --ext .vue,.js,.jsx,.cjs,.mjs --ignore-path .gitignore src",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "check:format": "prettier --check .",
-    "format": "prettier --write src/"
+    "format": "prettier . --write",
+    "pre-commit": "npm run format && npm run lint"
   },
   "dependencies": {
     "@cloudbolt/js-sdk": "^0.6.3",
