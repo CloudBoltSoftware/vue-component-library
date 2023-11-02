@@ -347,12 +347,16 @@ describe('fetchApplets', () => {
   // Test that fetchApplets adds an error response
   test('calls error alert when errors', async () => {
     const errorResponse = new Error('No response')
+    // Lazy mock of the alerts emitted by CbAppletTarget
+    const addErrorAlert = (msg, error) => console.error(msg, error)
+    const appletAlerts = { addErrorAlert }
+
     api.v3.cmp.applets.list.mockImplementation(() => {
       throw errorResponse
     })
     const error = vi.spyOn(console, 'error').mockImplementation(() => {})
     const store = useAppletsStore()
-    await store.fetchApplets(api)
+    await store.fetchApplets(api, appletAlerts)
     expect(error).toBeCalledWith('Failed to fetch applets', errorResponse)
   })
 })

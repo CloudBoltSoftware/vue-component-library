@@ -66,12 +66,19 @@ const props = defineProps({
 setActivePinia(props.pinia)
 const { t } = useI18n()
 const { appletId, page, area, context } = toRefs(props)
+// Emit alerts
+const emit = defineEmits(['alert:error', 'alert:info', 'alert:success', 'alert:remove'])
+const addErrorAlert = (msg, error) => emit('alert:error', msg, error)
+const addInfoAlert = (msg) => emit('alert:info', msg)
+const addSuccessAlert = (msg) => emit('alert:success', msg)
+const removeAlertById = (id) => emit('alert:remove', id)
+const appletAlerts = { addErrorAlert, addInfoAlert, addSuccessAlert, removeAlertById }
 
 const appletsStore = useAppletsStore()
 appletsStore.appletTargetApplication = props.targetApplication
 
 const fetchOptions = { errorMessage: t('error') }
-const fetchApplets = () => appletsStore.fetchApplets(props.api, fetchOptions)
+const fetchApplets = () => appletsStore.fetchApplets(props.api, appletAlerts, fetchOptions)
 
 // Fetch and cache the user's applets on the CUI
 const appletUserName = computed(() => props.user?.username || '')

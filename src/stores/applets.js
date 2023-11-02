@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { computed, ref, toValue } from 'vue'
-import { useAlertStore } from './alerts'
 
 /**
  * @typedef {object} Applet
@@ -60,23 +59,6 @@ export const useAppletsStore = defineStore('applets', () => {
 
   /** @type {import('vue').ComputedRef<Applet[]>} */
   const appletsEnabled = computed(() => applets.value.filter((applet) => applet.enabled))
-
-  /**
-   * Use the pinia alertStore, otherwise log to console
-   * TODO: Remove after moving the functionality of the CbAlert component to the library
-   */
-  const alert = useAlertStore()
-  const enableAlertStore = computed(() => ['cui'].includes(appletTargetApplication.value))
-  const addErrorAlert = computed(() =>
-    enableAlertStore.value ? alert.addErrorAlert : console.error
-  )
-  const addInfoAlert = computed(() => (enableAlertStore.value ? alert.addInfoAlert : console.log))
-  const addSuccessAlert = computed(() =>
-    enableAlertStore.value ? alert.addSuccessAlert : console.log
-  )
-  const removeAlertById = computed(() =>
-    enableAlertStore.value ? alert.removeAlertById : () => {}
-  )
 
   /**
    * The href for the css file for each enabled applet (deduplicated)
@@ -162,17 +144,17 @@ export const useAppletsStore = defineStore('applets', () => {
    * @param {string} [options.loadedMessage] message to display when loaded
    * @param {string} [options.errorMessage] message to display on error
    */
-  const fetchApplets = async (api, options = {}) => {
+  const fetchApplets = async (api, alerts = {}, options = {}) => {
     if (hasLoaded.value || isLoading.value) return
     isLoading.value = true
     let loadingAlert = {}
-    if (options.loadingMessage) loadingAlert = addInfoAlert.value(options.loadingMessage)
+    if (options.loadingMessage) loadingAlert = alerts?.addInfoAlert(options.loadingMessage)
 
     try {
       const data = await api.v3.cmp.applets.list()
       applets.value = data?.items || []
     } catch (error) {
-      appletError.value = addErrorAlert.value(
+      appletError.value = alerts?.addErrorAlert(
         options.errorMessage || 'Failed to fetch applets',
         error
       )
@@ -181,8 +163,8 @@ export const useAppletsStore = defineStore('applets', () => {
     appletError.value = null
     isLoading.value = false
     hasLoaded.value = true
-    if (loadingAlert.id) removeAlertById.value(loadingAlert.id)
-    if (options.loadedMessage) addSuccessAlert.value(options.loadedMessage)
+    if (loadingAlert.id) alerts?.removeAlertById(loadingAlert.id)
+    if (options.loadedMessage) alerts?.addSuccessAlert(options.loadedMessage)
   }
 
   /**
@@ -218,7 +200,6 @@ export const useAppletsStore = defineStore('applets', () => {
     appletsEnabled,
     appletsMap,
     appletTargetApplication,
-    useAlertStore,
     getApplet,
     fetchApplets,
     getAppletsForTarget,

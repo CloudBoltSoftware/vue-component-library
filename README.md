@@ -9,11 +9,6 @@ CbApplet
 - Exports `CbApplet`, `CbAppletTarget`, `TheCbAppletStyles`, and `useAppletsStore`
 - Currently not importing the /styles.css from the build as it is only Vuetify formatting for the icon
 
-CbAlert
-
-- Exports `useAlertStore`
-- TODO: Move the rest of the CbAlert component over
-
 ## Recommended IDE Setup
 
 [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
