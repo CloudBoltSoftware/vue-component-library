@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { computed, ref, toValue } from 'vue'
+import { useAlertStore } from './alerts'
 
 /**
  * @typedef {object} Applet
@@ -41,24 +42,7 @@ import { computed, ref, toValue } from 'vue'
  * @typedef {Object.<string, AppletAreaMap|AppletTargetConfig[]>} AppletTargetMap
  */
 
-/** Pulled from the pinia AlertStore
- * @typedef Alert
- * @type {object}
- *
- * Properties to determine the widget identity
- * @property {number} id the unique id of the alert
- * @property {string} type type of alert
- * @property {string} message the message to display
- * @property {boolean} closable whether the alert is closable
- * @property {number} timeout the amount of time to display the alert
- * @property {number} timeoutId the id of the timeout
- */
-
 export const useAppletsStore = defineStore('applets', () => {
-  /** @type {object} */
-  const appletApi = ref(undefined)
-  const useAlertStore = ref(undefined)
-
   /** @type {Applet[]} */
   const applets = ref([])
 
@@ -71,27 +55,27 @@ export const useAppletsStore = defineStore('applets', () => {
   /** @type {boolean} */
   const hasLoaded = ref(false)
 
-  /** @type {Alert|null} */
+  /** @type {import('./alerts.js').Alert|null} */
   const appletError = ref(null)
 
   /** @type {import('vue').ComputedRef<Applet[]>} */
   const appletsEnabled = computed(() => applets.value.filter((applet) => applet.enabled))
 
   /**
-   * Use the pinia AlertStore if it exists, otherwise log to console
+   * Use the pinia alertStore, otherwise log to console
+   * TODO: Remove after moving the functionality of the CbAlert component to the library
    */
-  const alertStoreExists = computed(() => useAlertStore.value != undefined && useAlertStore.value())
+  const alert = useAlertStore()
+  const enableAlertStore = computed(() => ['cui'].includes(appletTargetApplication.value))
   const addErrorAlert = computed(() =>
-    alertStoreExists.value ? useAlertStore.value().addErrorAlert : console.error
+    enableAlertStore.value ? alert.addErrorAlert : console.error
   )
-  const addInfoAlert = computed(() =>
-    alertStoreExists.value ? useAlertStore.value().addInfoAlert : console.log
-  )
+  const addInfoAlert = computed(() => (enableAlertStore.value ? alert.addInfoAlert : console.log))
   const addSuccessAlert = computed(() =>
-    alertStoreExists.value ? useAlertStore.value().addSuccessAlert : console.log
+    enableAlertStore.value ? alert.addSuccessAlert : console.log
   )
   const removeAlertById = computed(() =>
-    alertStoreExists.value ? useAlertStore.value().removeAlertById : () => {}
+    enableAlertStore.value ? alert.removeAlertById : () => {}
   )
 
   /**
@@ -132,10 +116,10 @@ export const useAppletsStore = defineStore('applets', () => {
             if (!map[page]) map[page] = {}
             if (!map[page][area]) map[page][area] = []
             map[page][area].push(applet)
-          } else if (Array.isArray(area.location)) {
-            // If the area is an object that include location info,
-            // make it accessible at that location
-            area.location.forEach((localArea) => {
+          } else if (Array.isArray(area.position)) {
+            // If the area is an object that include its position
+            // info, make it accessible there
+            area.position.forEach((localArea) => {
               if (!map[page]) map[page] = {}
               if (!map[page][localArea]) map[page][localArea] = []
               map[page][localArea].push(applet)
@@ -178,14 +162,8 @@ export const useAppletsStore = defineStore('applets', () => {
    * @param {string} [options.loadedMessage] message to display when loaded
    * @param {string} [options.errorMessage] message to display on error
    */
-  const fetchApplets = async (options = {}) => {
+  const fetchApplets = async (api, options = {}) => {
     if (hasLoaded.value || isLoading.value) return
-    if (appletApi.value === undefined) {
-      throw Error(
-        'No "appletApi" instance loaded in the Applet store. Please pass "api" to CbAppletTarget or set it directly'
-      )
-    }
-    const api = toValue(appletApi)
     isLoading.value = true
     let loadingAlert = {}
     if (options.loadingMessage) loadingAlert = addInfoAlert.value(options.loadingMessage)
@@ -213,7 +191,7 @@ export const useAppletsStore = defineStore('applets', () => {
    * @param {import('vue').MaybeRefOrGetter<string>} targetArea or 'all'
    * @returns {Applet[]}
    */
-  const getAppletsForTarget = (targetPage, targetArea, targetId = undefined) => {
+  const getAppletsForTarget = (targetPage, targetArea, appletId = undefined) => {
     const page = toValue(targetPage)
     const area = toValue(targetArea)
     const allPossibleTargetApplets = [
@@ -223,18 +201,17 @@ export const useAppletsStore = defineStore('applets', () => {
       ...(appletsMap.value.all?.all || [])
     ]
     let refinedPossibleTargetApplets
-    if (targetId) {
-      const id = toValue(targetId)
+    if (appletId) {
+      const id = toValue(appletId)
       refinedPossibleTargetApplets = allPossibleTargetApplets.filter((applet) => applet.id === id)
     }
-    const uniqueTargetApplets = targetId
+    const uniqueTargetApplets = appletId
       ? [...new Set(refinedPossibleTargetApplets)]
       : [...new Set(allPossibleTargetApplets)]
     return uniqueTargetApplets
   }
 
   return {
-    appletApi,
     appletError,
     applets,
     appletsCssHrefs,

@@ -27,7 +27,6 @@ describe('initial state', () => {
     ['isLoading', false],
     ['hasLoaded', false],
     ['appletTargetApplication', ''],
-    ['useAlertStore', undefined],
     ['appletApi', undefined]
   ]
 
@@ -234,7 +233,7 @@ describe('getAppletsForTarget', () => {
             {
               resourceTypes: ['s3_bucket'],
               label: 'Custom Applet',
-              location: ['post-jobs-tab', 'post-history-tab']
+              position: ['post-jobs-tab', 'post-history-tab']
             }
           ]
         }
@@ -249,7 +248,7 @@ describe('getAppletsForTarget', () => {
             {
               resourceTypes: ['server'],
               label: 'Second Applet',
-              location: ['post-overview-tab', 'post-history-tab']
+              position: ['post-overview-tab', 'post-history-tab']
             }
           ]
         }
@@ -297,65 +296,64 @@ describe('getAppletsForTarget', () => {
 })
 
 describe('fetchApplets', () => {
-  let store
   const api = { v3: { cmp: { applets: { list: vi.fn() } } } }
   beforeEach(() => {
     setRealPiniaToDefaults()
     const mockAppletList = { items: [mockApplet] }
-    store = useAppletsStore()
-    store.appletApi = api
     api.v3.cmp.applets.list.mockResolvedValue(mockAppletList)
   })
 
   // Test that isLoading gets set properly
   test('sets isLoading to true while runninng', async () => {
     const store = useAppletsStore()
-    store.fetchApplets()
+    store.fetchApplets(api)
     expect(store.isLoading).toBe(true)
   })
 
   test('sets isLoading to false when done', async () => {
     const store = useAppletsStore()
-    await store.fetchApplets()
+    await store.fetchApplets(api)
     expect(store.isLoading).toBe(false)
   })
 
   // Test that hasLoaded is set to true when fetchApplets is done
   test('sets hasLoaded to true when done', async () => {
     const store = useAppletsStore()
-    await store.fetchApplets()
+    await store.fetchApplets(api)
     expect(store.hasLoaded).toBe(true)
   })
 
   // Test that the API endpoint is called properly
   test('calls the API endpoint', async () => {
     const store = useAppletsStore()
-    await store.fetchApplets()
+    await store.fetchApplets(api)
     expect(api.v3.cmp.applets.list).toHaveBeenCalled()
   })
 
   test('only calls the API endpoint once', async () => {
     const store = useAppletsStore()
-    await store.fetchApplets()
-    await store.fetchApplets()
+    await store.fetchApplets(api)
+    await store.fetchApplets(api)
     expect(api.v3.cmp.applets.list).toHaveBeenCalledOnce()
   })
 
   // Test that applets is set to the response from the API endpoint
   test('sets applets to the response', async () => {
     const store = useAppletsStore()
-    await store.fetchApplets()
+    await store.fetchApplets(api)
     expect(store.applets).toContainEqual(mockApplet)
   })
 
-  test('errors correctly when appletApi not provided', async () => {
+  // Test that fetchApplets adds an error response
+  test('calls error alert when errors', async () => {
+    const errorResponse = new Error('No response')
+    api.v3.cmp.applets.list.mockImplementation(() => {
+      throw errorResponse
+    })
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {})
     const store = useAppletsStore()
-    store.appletApi = undefined
-    expect(async () => store.fetchApplets()).rejects.toThrow(
-      new Error(
-        'No "appletApi" instance loaded in the Applet store. Please pass "api" to CbAppletTarget or set it directly'
-      )
-    )
+    await store.fetchApplets(api)
+    expect(error).toBeCalledWith('Failed to fetch applets', errorResponse)
   })
 })
 

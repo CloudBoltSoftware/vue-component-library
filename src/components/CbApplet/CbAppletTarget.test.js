@@ -65,7 +65,7 @@ const mountApplet = (options = {}) => {
       page: 'testPage',
       context: { hello: 'world' },
       additionalProp: 'test',
-      useUserStore: () => ({ username: ref('John Doe') }),
+      user: { username: ref('John Doe') },
       pinia,
       api: { default: { get: vi.fn() } }
     },
