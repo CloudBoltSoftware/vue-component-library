@@ -143,6 +143,12 @@ export const useAppletsStore = defineStore('applets', () => {
    * @param {string} [options.loadingMessage] message to display while loading
    * @param {string} [options.loadedMessage] message to display when loaded
    * @param {string} [options.errorMessage] message to display on error
+   *
+   * @param {object} [alerts]
+   * @param {function} [alerts.addInfoAlert] function to handle info alerts (display the loadingMessage from options)
+   * @param {function} [alerts.addErrorAlert] function to handle error alerts (takes errorMessage and an error event)
+   * @param {function} [alerts.addSuccessAlert] function to handle success alerts (display the loadedMessage from options)
+   * @param {function} [alerts.removeAlertById] function to handle removing alerts by id. Important when using an alerts store/component
    */
   const fetchApplets = async (api, alerts = {}, options = {}) => {
     if (hasLoaded.value || isLoading.value) return
@@ -173,9 +179,10 @@ export const useAppletsStore = defineStore('applets', () => {
    * @param {import('vue').MaybeRefOrGetter<string>} targetArea or 'all'
    * @returns {Applet[]}
    */
-  const getAppletsForTarget = (targetPage, targetArea, appletId = undefined) => {
+  const getAppletsForTarget = (targetPage, targetArea, targetAppletId = undefined) => {
     const page = toValue(targetPage)
     const area = toValue(targetArea)
+    const appletId = toValue(targetAppletId)
     const allPossibleTargetApplets = [
       ...(appletsMap.value[page]?.[area] || []),
       ...(appletsMap.value[page]?.all || []),
