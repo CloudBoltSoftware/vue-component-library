@@ -1,6 +1,7 @@
 {
   "name": "@cloudbolt/vue-component-library",
   "version": "0.0.8",
+  "license": "MIT",
   "description": "CloudBolt component library",
   "type": "module",
   "files": [
