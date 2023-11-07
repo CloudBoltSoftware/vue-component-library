@@ -21,6 +21,5 @@ jobs:
       - uses: JS-DevTools/npm-publish@v3
         with:
           token: ${{ secrets.NPM_TOKEN }}
-          tag: ${{ github.ref_name }}
           access: public
           dry-run: ${{ vars.DRY_RUN }}
